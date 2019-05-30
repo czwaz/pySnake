@@ -17,19 +17,23 @@ direction = {
 dir_str = 'NSEW'
 cur_dir = 'E'
 
-def disp_update (field):
+field = [[' ' for j in range (width)] for i in range (height)]
+
+def disp_update ():
+    global field
     print ('#' * (width+2))
     for line in field:
         print ('%c%s%c' % ('#', ''.join (line), '#'))
     print ('#' * (width+2))
 
-def add_head (field, head):
+def add_head (head):
+    global field
     y = head[0]
     x = head[1]
     if (y < 0 or y >= height or x < 0 or x >= width):
-        return field
+        return False
     field[y][x] = snake_chr
-    return field
+    return True
 
 def rand_dir ():
     global cur_dir
@@ -46,23 +50,23 @@ def rand_dir ():
     return direction.get (cur_dir)
 
 def main ():
+    global field
     snake_pos = []
     Head = [5, 10]
     Dir = direction.get(cur_dir)
     timestamp = 0
-    field = [[' ' for j in range (width)] for i in range (height)]
     field[Head[0]][Head[1]] = 'o'
     
     while True:
         os.system ('cls')
-        print (timestamp, Head)
         timestamp += 1
-        #Dir = direction.get (dir_str[random.randint (0, 3)])
         Dir = rand_dir ()
-        print (Dir)
+        print (timestamp, Head, Dir)
         Head = np.add (Head, Dir)
-        field = add_head (field, Head)
-        disp_update (field)
+        if (not add_head (Head)):
+            print ('you lose')
+            break
+        disp_update ()
         time.sleep (1)
 
 
